@@ -1,5 +1,5 @@
 using DigitalBookStoreManagement.Authentication;
-using DigitalBookStoreManagement.Expection;
+using DigitalBookStoreManagement.Expections;
 using System.Text;
 using DigitalBookStoreManagement.Model;
 using DigitalBookStoreManagement.Repository;

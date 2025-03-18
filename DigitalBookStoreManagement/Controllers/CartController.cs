@@ -3,7 +3,7 @@ using DigitalBookStoreManagement.Model;
 using DigitalBookStoreManagement.Repositories;
 using Microsoft.AspNetCore.Authorization;
 
-using DigitalBookStoreManagement.Expection;
+using DigitalBookStoreManagement.Expections;
 namespace DigitalBookStoreManagement.Controllers
 
 {

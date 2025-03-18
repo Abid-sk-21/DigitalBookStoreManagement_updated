@@ -7,7 +7,7 @@ namespace DigitalBookStoreManagement.Model
 {
     public class BookManagement
     {
-        [Key, DatabaseGenerated(DatabaseGeneratedOption.None)]
+        [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int BookID { get; set; }
 
         [Required(ErrorMessage = "Title is required")]

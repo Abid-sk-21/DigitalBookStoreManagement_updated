@@ -1,4 +1,4 @@
-﻿namespace DigitalBookStoreManagement.Expection
+﻿namespace DigitalBookStoreManagement.Expections
 {
     public class UserNotFoundException : ApplicationException
     {

@@ -66,7 +66,7 @@ namespace DigitalBookStoreManagement.Controllers
                 return BadRequest("Invalid book data.");
             }
             await _bookService.UpdateBookAsync(book);
-            return NoContent();
+            return Ok($"{book.Title} was updated successfully.");
         }
 
         // DELETE: api/book/{id}
@@ -75,7 +75,7 @@ namespace DigitalBookStoreManagement.Controllers
         public async Task<ActionResult> DeleteBook(int id)
         {
             await _bookService.DeleteBookAsync(id);
-            return NoContent();
+            return Ok($"Book with BookID {id} was deleted.");
         }
 
         // GET: api/book/search?title={title}
@@ -101,15 +101,5 @@ namespace DigitalBookStoreManagement.Controllers
         {
             return Ok(await _bookService.GetBooksByAuthorNameAsync(authorName));
         }
-
-
-
-
-        // GET: api/book/stock/{id}
-        //[HttpGet("stock/{id}")]
-        //public async Task<ActionResult<string>> GetStockAvailability(int id)
-        //{
-        //    return Ok(await _bookService.GetStockAvailabilityAsync(id));
-        //}
     }
 }

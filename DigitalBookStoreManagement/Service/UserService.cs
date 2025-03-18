@@ -1,4 +1,4 @@
-﻿using DigitalBookStoreManagement.Expection;
+﻿using DigitalBookStoreManagement.Expections;
 using DigitalBookStoreManagement.Model;
 using DigitalBookStoreManagement.Repository;
 

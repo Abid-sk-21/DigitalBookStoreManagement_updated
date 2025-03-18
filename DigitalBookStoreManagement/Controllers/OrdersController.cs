@@ -1,7 +1,6 @@
 ﻿
 
 using DigitalBookStoreManagement.Model;
-using DigitalBookStoreManagement.Model;
 using DigitalBookStoreManagement.Repository;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

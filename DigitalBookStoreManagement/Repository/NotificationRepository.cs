@@ -41,7 +41,6 @@ namespace DigitalBookStoreManagement.Repository
                 existingNotification.Message = $"The book containing in Inventory {inventoryId} with BookID {bookId} of '{title}' is less than the notifylimit {notifylimit}. Kindly re-stock the book.";
                 _context.Notifications.Update(existingNotification);
             }
-
             await _context.SaveChangesAsync();
         }
     }

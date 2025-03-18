@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using DigitalBookStoreManagement.Repositories;
 using DigitalBookStoreManagement.Repository;
-using DigitalBookStoreManagement.Expection;
+using DigitalBookStoreManagement.Expections;
 
 namespace DigitalBookStoreManagement.Controllers
 {

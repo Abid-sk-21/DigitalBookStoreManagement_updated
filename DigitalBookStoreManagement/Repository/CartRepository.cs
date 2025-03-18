@@ -3,7 +3,7 @@ using DigitalBookStoreManagement.Repository;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using DigitalBookStoreManagement.Expection;
+using DigitalBookStoreManagement.Expections;
 
 namespace DigitalBookStoreManagement.Repositories
 {

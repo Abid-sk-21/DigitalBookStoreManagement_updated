@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc;
 
-namespace DigitalBookStoreManagement.Expection
+namespace DigitalBookStoreManagement.Expections
 {
     public class ExceptionHandlerAttribute : ExceptionFilterAttribute
     {

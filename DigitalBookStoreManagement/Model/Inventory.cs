@@ -5,7 +5,7 @@ namespace DigitalBookStoreManagement.Model
 {
     public class Inventory
     {
-        [Key, DatabaseGenerated(DatabaseGeneratedOption.None)]
+        [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int InventoryID { get; set; }
 
         [Required(ErrorMessage = "BookID is required")]

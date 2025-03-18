@@ -57,25 +57,28 @@ namespace DigitalBookStoreManagement.Repository
                 .ToListAsync();
         }
 
-        public async Task AddBookAsync(BookManagement book)
+        public async Task<BookManagement> AddBookAsync(BookManagement book)
         {
+            var existingAuthor = await _context.Authors.FirstOrDefaultAsync(a => a.AuthorName == book.Author.AuthorName);
+            if (existingAuthor != null)
+            {
+                book.AuthorID = existingAuthor.AuthorID;
+                book.Author = null;
+            }
+
+            var existingCategory = await _context.Categories.FirstOrDefaultAsync(c => c.CategoryName == book.Category.CategoryName);
+            if (existingCategory != null)
+            {
+                book.CategoryID = existingCategory.CategoryID;
+                book.Category = null;
+            }
+
             _context.Books.AddAsync(book);
             await _context.SaveChangesAsync();
+            return book;
         }
         public async Task UpdateBookAsync(BookManagement book)
         {
-            //var existingBook = await _context.Books.FindAsync(book.BookID);
-            //if (existingBook == null) return false;
-
-            //existingBook.Title = book.Title;
-            //existingBook.AuthorID = book.AuthorID;
-            //existingBook.CategoryID = book.CategoryID;
-            //existingBook.Price = book.Price;
-            //existingBook.StockQuantity = book.StockQuantity;
-            //existingBook.ImageURL = book.ImageURL;
-
-            //_context.Books.Update(existingBook);
-            //return true;
             _context.Books.Update(book);
             await _context.SaveChangesAsync();
         }
@@ -90,27 +93,5 @@ namespace DigitalBookStoreManagement.Repository
 
             }
         }
-
-
-
-
-
-
-
-
-
-
-
-        //public async Task<string> GetStockAvailabilityAsync(int bookId)
-        //{
-        //    var inventory = await
-        //        _context.Inventories.FirstOrDefaultAsync(i=>i.BookID == bookId);
-        //    if (inventory == null || inventory.Quantity == 0)
-        //        return "Not Available";
-        //    else if (inventory.Quantity > 0 && inventory.Quantity <= 5)
-        //        return "Only a few books are left";
-        //    else
-        //        return "Available";
-        //}
     }
 }

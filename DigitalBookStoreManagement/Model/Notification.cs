@@ -5,7 +5,7 @@ namespace DigitalBookStoreManagement.Model
 {
     public class Notification
     {
-        [Key, DatabaseGenerated(DatabaseGeneratedOption.None)]
+        [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int NotificationID { get; set; }
         public string Message { get; set; } = string.Empty;
     }

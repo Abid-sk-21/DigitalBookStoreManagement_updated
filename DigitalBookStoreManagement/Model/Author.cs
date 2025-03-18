@@ -5,7 +5,7 @@ namespace DigitalBookStoreManagement.Model
 {
     public class Author
     {
-        [Key, DatabaseGenerated(DatabaseGeneratedOption.None)]
+        [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int AuthorID { get; set; }
         [Required]
         [StringLength(50, ErrorMessage = "Author name cannot exceed 50 characters")]
