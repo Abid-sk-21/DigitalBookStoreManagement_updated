@@ -1,0 +1,6 @@
+@DigitalBookStoreManagement_HostAddress = http://localhost:5296
+
+GET {{DigitalBookStoreManagement_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
