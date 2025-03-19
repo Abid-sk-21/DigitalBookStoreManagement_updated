@@ -1,4 +1,4 @@
-﻿create procedure GetAllUsers
+﻿﻿create procedure GetAllUsers
 as
 begin
 	select * from Users

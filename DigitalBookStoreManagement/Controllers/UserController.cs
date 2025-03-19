@@ -35,9 +35,8 @@ namespace DigitalBookStoreManagement.Controllers
         }
 
         //Get the particular data according to the id
-        [Authorize(Roles = "Customer")]
+        [Authorize(Roles = "Customer,Admin")]
         [HttpGet("UserById/{id}")]
-        //[Route("ById/{id}")]
         public ActionResult Get(int id)
         {
             try
@@ -54,7 +53,9 @@ namespace DigitalBookStoreManagement.Controllers
             }
         }
 
-        //[Authorize(Roles = "Customer")]
+
+        //Profile Management
+        [Authorize(Roles = "Customer,Admin")]
         [HttpGet("ProfileManagement")]
         public ActionResult GetProfile(int UsereId)
         {
@@ -93,22 +94,15 @@ namespace DigitalBookStoreManagement.Controllers
         
         }
 
-        //
-        //Delete the record from the database 
-        //[HttpDelete]
-        //[Route("{id}")]
-        //public ActionResult Delete(int id)
-        //{
-        //    return Ok(service.RemoveUser(id));
-        //}
-
         //Update the record
+        [Authorize(Roles = "Customer,Admin")]
         [HttpPut]
-        [Route("Update-Details/{id}")]
+        [Route("Update-Details")]
         public ActionResult Put(int id, [FromBody]string password)
         {
             return Ok(service.UpdateUser(id, password));
         }
+
 
         //Authentication of the user
         [AllowAnonymous]
