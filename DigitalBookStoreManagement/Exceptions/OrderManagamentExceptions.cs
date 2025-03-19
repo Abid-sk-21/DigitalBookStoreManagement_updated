@@ -16,6 +16,13 @@
 
 
     }
+    public class QuantityNotAvailable : OrderManagamentExceptions
+    {
+
+        public QuantityNotAvailable(int BookID) : base($"The Ordered Quantity is greater than the Stock Available.") { }
+
+
+    }
     public class OrderNotFoundException : OrderManagamentExceptions
     {
         public OrderNotFoundException(int OrderID) : base($"Order with ID {OrderID} was not found.") { }

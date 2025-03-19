@@ -1,15 +1,14 @@
-﻿
-
-using DigitalBookStoreManagement.Model;
+﻿using DigitalBookStoreManagement.Model;
+using DigitalBookStoreManagement.Models;
 using DigitalBookStoreManagement.Repository;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 
 namespace DigitalBookStoreManagement.Controllers
 {
+
     [Authorize]
     [Route("api/[controller]")]
     [ApiController]
@@ -24,79 +23,141 @@ namespace DigitalBookStoreManagement.Controllers
 
         [AllowAnonymous]
         [HttpGet("get-orders")]
-        public ActionResult<List<Order>> GetOrders()
+        public ActionResult<IEnumerable<Order>> GetOrders()
         {
-            var order = _orderRepository.GetAllOrder();
-            if (order == null)
+            try
             {
-                return NotFound();
+                var orders = _orderRepository.GetAllOrder();
+                return Ok(orders);
             }
-            return order;
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
         }
 
-
-        [Authorize(Roles = "Customer , Admin")]
+        [AllowAnonymous]
         [HttpGet("{orderId}")]
         public ActionResult<Order> GetOrderByOrderId(int orderId)
         {
-            var order = _orderRepository.GetOrderByOrderId(orderId);
-            if (order == null)
+            try
             {
-                return NotFound();
+                var order = _orderRepository.GetOrderByOrderId(orderId);
+                if (order == null)
+                {
+                    return NotFound($"Order with ID {orderId} not found.");
+                }
+                return Ok(order);
             }
-            return order;
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
         }
         [Authorize(Roles = "Customer")]
         [HttpGet("user/{userId}")]
-        public ActionResult<List<Order>> GetOrderByUserId(int userId)
+        public ActionResult<IEnumerable<Order>> GetOrderByUserId(int userId)
         {
-            var order = _orderRepository.GetOrderByUserId(userId);
-            if (order == null)
+            try
             {
-                return NotFound();
+                var orders = _orderRepository.GetOrderByUserId(userId);
+                return Ok(orders);
             }
-            return order;
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
         }
 
 
         [Authorize(Roles = "Customer")]
         [HttpPost("place-order")]
-        public ActionResult<bool> PlaceOrder(Order order)
+        public ActionResult<Order> PlaceOrder(Order order)
         {
-            var result = _orderRepository.PlaceOrder(order);
-            if (result != null)
+            try
             {
-                return CreatedAtAction(nameof(GetOrderByOrderId), new { orderId = order.OrderID }, order);
+                if (order == null)
+                {
+                    return BadRequest("Invalid order data.");
+                }
+
+                var createdOrder = _orderRepository.PlaceOrder(order);
+                return CreatedAtAction(nameof(GetOrderByOrderId), new { orderId = createdOrder.OrderID }, createdOrder);
             }
-            return BadRequest();
+            catch (ArgumentNullException ex)
+            {
+                return BadRequest($"Bad request: {ex.Message}");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
         }
+
 
         [Authorize(Roles = "Customer")]
         [HttpDelete("cancel-order/{orderId}")]
-        public ActionResult<bool> CancelOrder(int orderId)
+        public IActionResult CancelOrder(int orderId)
         {
-            var result = _orderRepository.CancelOrder(orderId);
-            if (result)
+            try
             {
+                var result = _orderRepository.CancelOrder(orderId);
+                if (!result)
+                {
+                    return NotFound($"Order with ID {orderId} not found or already canceled.");
+                }
                 return NoContent();
             }
-            return NotFound();
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
         }
+
+
         [Authorize(Roles = "Admin")]
         [HttpPut("{orderId}/order-status")]
-        public ActionResult<Order> UpdateStatus(int orderId, [FromBody] string status)
+        public IActionResult UpdateStatus(int orderId, [FromBody] string status)
         {
-            var result = _orderRepository.UpdateStatus(orderId, status);
-            if (result)
+            try
             {
+                if (string.IsNullOrWhiteSpace(status))
+                {
+                    return BadRequest("Order status cannot be empty.");
+                }
+
+                var result = _orderRepository.UpdateStatus(orderId, status);
+                if (!result)
+                {
+                    return NotFound($"Order with ID {orderId} not found.");
+                }
                 return NoContent();
             }
-            return NotFound();
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
         }
 
+        [AllowAnonymous]
+        [HttpPut("{id}/update-total")]
+        public IActionResult UpdateOrderTotal(int id)
+        {
+            try
+            {
+                var updated = _orderRepository.UpdateOrderTotal(id);
+                if (!updated)
+                {
+                    return NotFound($"Order with ID {id} not found or update failed.");
+                }
 
-    
-
+                var updatedOrder = _orderRepository.GetOrderByOrderId(id);
+                return Ok(updatedOrder);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
     }
 }
-

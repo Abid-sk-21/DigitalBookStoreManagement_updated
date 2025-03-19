@@ -1,8 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using DigitalBookStoreManagement.Model;
+using DigitalBookStoreManagement.Models;
 using DigitalBookStoreManagement.Repositories;
 using Microsoft.AspNetCore.Authorization;
 
+using DigitalBookStoreManagement.Model;
 using DigitalBookStoreManagement.Expections;
 namespace DigitalBookStoreManagement.Controllers
 
@@ -20,19 +21,19 @@ namespace DigitalBookStoreManagement.Controllers
         }
 
 
-        [Authorize(Roles ="Admin, Customer")]
+        [Authorize(Roles = "Admin, Customer")]
         [HttpGet("get-cart-by-id/{id}")]
         public async Task<ActionResult<Cart>> GetCart(int id)
         {
             var cart = await _cartRepository.GetCartByID(id);
             if (cart == null)
             {
-                return NotFound();
+                return NotFound($"Cart with id {id} does not exists.");
             }
             return Ok(cart);
         }
 
-        [Authorize(Roles = "Customer ,Admin")]
+        [Authorize(Roles = "Customer")]
         [HttpPost("add-item-to-cart/{userId}")]
         public IActionResult AddItemToCart(int userId, CartItem newItem)
         {
@@ -64,13 +65,21 @@ namespace DigitalBookStoreManagement.Controllers
         [HttpDelete("delete-cart/{id}")]
         public async Task<IActionResult> DeleteCart(int id)
         {
-            var cart = await _cartRepository.GetCartByID(id);
-            if (cart == null)
+
+            try
             {
-                throw new OrderNotFoundException(id);
+                var cart = await _cartRepository.GetCartByID(id);
+                await _cartRepository.DeleteCart(id);
+
+
+
+            }
+            catch (OrderNotFoundException ex)
+            {
+                return Conflict();
             }
 
-            await _cartRepository.DeleteCart(id);
+
             return NoContent();
         }
 

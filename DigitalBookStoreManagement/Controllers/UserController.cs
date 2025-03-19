@@ -62,7 +62,8 @@ namespace DigitalBookStoreManagement.Controllers
             try
             {
                 var profile = _orderRepository.GetOrderByUserId(UsereId);
-                if (profile.Count == 0)
+                int count = profile.Count();
+                if (count == 0)
                 {
                     return NotFound("User doesn't exist");
                 }

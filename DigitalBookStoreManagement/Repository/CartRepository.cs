@@ -1,9 +1,10 @@
-﻿using DigitalBookStoreManagement.Model;
-using DigitalBookStoreManagement.Repository;
+﻿using DigitalBookStoreManagement.Expections;
+using DigitalBookStoreManagement.Model;
+using DigitalBookStoreManagement.Models;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
+
 using Microsoft.EntityFrameworkCore;
-using DigitalBookStoreManagement.Expections;
 
 namespace DigitalBookStoreManagement.Repositories
 {
@@ -39,9 +40,9 @@ namespace DigitalBookStoreManagement.Repositories
 
             }
             var checkQuantityAvailable = _context.Inventories.FirstOrDefault(QA => QA.BookID == newItem.BookID);
-            if (checkQuantityAvailable.Quantity <= newItem.Quantity)    
+            if (checkQuantityAvailable.Quantity <= newItem.Quantity)
             {
-                throw new OutOfStockException(newItem.BookID);
+                throw new QuantityNotAvailable(newItem.BookID);
             }
 
 
