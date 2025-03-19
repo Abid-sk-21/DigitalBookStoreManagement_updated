@@ -110,8 +110,8 @@ namespace DigitalBookStoreManagement.Controllers
         public IActionResult Authentication([FromBody] UserCredential credential)
         {
             var token = jwtAuth.Authentication(credential.Email, credential.Password);
-            if (token == null)
-                return Unauthorized();
+            if (token == "invalid credential")
+                return Unauthorized(new { Warning = "Invalid Credentials" });
             return Ok(token);
         }
     }
