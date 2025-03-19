@@ -35,7 +35,12 @@ namespace DigitalBookStoreManagement.Service
 
         public async Task<IEnumerable<BookManagement>> SearchBooksByTitleAsync(string title)
         {
-            return await _repository.SearchBooksByTitleAsync(title);
+            var book = await _repository.SearchBooksByTitleAsync(title);
+            if (!book.Any())
+            {
+                throw new NotFoundException($"{title} Book not found.");
+            }
+            return book;
         }
 
         public async Task<IEnumerable<BookManagement>> GetBooksByAuthorNameAsync(string authorName)
@@ -51,7 +56,7 @@ namespace DigitalBookStoreManagement.Service
         public async Task<BookManagement> AddBookAsync(BookManagement book)
         {
             var existingBook = await _repository.SearchBooksByTitleAsync(book.Title);
-            if (existingBook != null)
+            if (existingBook == null)
             {
                 throw new AlreadyExistsException($"Book {book.Title} already exists.");
             }

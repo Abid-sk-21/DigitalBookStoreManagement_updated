@@ -83,7 +83,8 @@ namespace DigitalBookStoreManagement.Controllers
         [HttpGet("search")]
         public async Task<ActionResult<IEnumerable<BookManagement>>> SearchBooksByTitle([FromQuery] string title)
         {
-            return Ok(await _bookService.SearchBooksByTitleAsync(title));
+            var existing = await _bookService.SearchBooksByTitleAsync(title);
+            return Ok(existing);
         }
 
         // GET: api/book/filter/category?categoryName={categoryName}
