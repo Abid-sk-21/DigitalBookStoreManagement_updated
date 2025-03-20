@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using DigitalBookStoreManagement.Repositories;
 using DigitalBookStoreManagement.Repository;
 using DigitalBookStoreManagement.Expections;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace DigitalBookStoreManagement.Controllers
 {
@@ -56,21 +57,25 @@ namespace DigitalBookStoreManagement.Controllers
 
         //Profile Management
         [Authorize(Roles = "Customer,Admin")]
+        //[AllowAnonymous]
         [HttpGet("ProfileManagement")]
         public ActionResult GetProfile(int UsereId)
         {
+            var profile = _orderRepository.GetOrderByUserId(UsereId);
+            int count = profile.Count();
             try
             {
-                var profile = _orderRepository.GetOrderByUserId(UsereId);
-                int count = profile.Count();
                 if (count == 0)
                 {
                     return NotFound("User doesn't exist");
                 }
                 return Ok(profile);
+
+
             }
             catch
             {
+
                 return StatusCode(500, "Internal server error");
             }
         }

@@ -12,7 +12,7 @@ namespace DigitalBookStoreManagement.Model
 
         public int UserID { get; set; }
 
-        [Required(ErrorMessage = "Order Date is Required.")]
+        [Required(ErrorMessage = "Order Date is Required.")] 
         public DateTime OrderDate { get; set; }
 
 

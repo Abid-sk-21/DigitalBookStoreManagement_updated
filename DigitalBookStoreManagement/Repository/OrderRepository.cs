@@ -35,7 +35,6 @@ public class OrderRepository : IOrderRepository
     {
         return _context.Orders
                        .Include(o => o.OrderItems)
-                       .AsNoTracking()
                        .Where(o => o.UserID == userId)
                        .ToList();
     }
