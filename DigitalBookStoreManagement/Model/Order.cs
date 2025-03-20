@@ -20,6 +20,7 @@ namespace DigitalBookStoreManagement.Model
         //[Range(0.01, double.MaxValue, ErrorMessage = " Total Amount must be greater than zero")]
         public double TotalAmount { get; set; }
 
+        [Required(ErrorMessage ="Delivery Address is Required.")]
         public string DeliveryAddress { get; set; }
 
         public string? OrderStatus { get; set; }
