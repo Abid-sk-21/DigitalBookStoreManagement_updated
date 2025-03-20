@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace DigitalBookStoreManagement.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialMigration : Migration
+    public partial class initialMigration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -15,7 +15,8 @@ namespace DigitalBookStoreManagement.Migrations
                 name: "Authors",
                 columns: table => new
                 {
-                    AuthorID = table.Column<int>(type: "int", nullable: false),
+                    AuthorID = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     AuthorName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false)
                 },
                 constraints: table =>
@@ -53,7 +54,8 @@ namespace DigitalBookStoreManagement.Migrations
                 name: "Notifications",
                 columns: table => new
                 {
-                    NotificationID = table.Column<int>(type: "int", nullable: false),
+                    NotificationID = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     Message = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
@@ -70,6 +72,7 @@ namespace DigitalBookStoreManagement.Migrations
                     UserID = table.Column<int>(type: "int", nullable: false),
                     OrderDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     TotalAmount = table.Column<double>(type: "float", nullable: false),
+                    DeliveryAddress = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     OrderStatus = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     PaymentStatus = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
@@ -103,7 +106,7 @@ namespace DigitalBookStoreManagement.Migrations
                     Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     Email = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     Password = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    Role = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false)
+                    Role = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -137,7 +140,8 @@ namespace DigitalBookStoreManagement.Migrations
                 name: "Books",
                 columns: table => new
                 {
-                    BookID = table.Column<int>(type: "int", nullable: false),
+                    BookID = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     Title = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
                     AuthorID = table.Column<int>(type: "int", nullable: false),
                     CategoryID = table.Column<string>(type: "nvarchar(50)", nullable: false),
@@ -189,7 +193,8 @@ namespace DigitalBookStoreManagement.Migrations
                 name: "Inventories",
                 columns: table => new
                 {
-                    InventoryID = table.Column<int>(type: "int", nullable: false),
+                    InventoryID = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     BookID = table.Column<int>(type: "int", nullable: false),
                     Quantity = table.Column<int>(type: "int", nullable: false),
                     NotifyLimit = table.Column<int>(type: "int", nullable: false)

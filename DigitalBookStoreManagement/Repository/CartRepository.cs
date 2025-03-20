@@ -30,6 +30,8 @@ namespace DigitalBookStoreManagement.Repositories
         {
 
             var CheckCartExists = _context.Carts.Include(ci => ci.CartItems).FirstOrDefault(c => c.UserID == userId);
+
+            var BookToAdd = _context.Books.FirstOrDefault(b => b.BookID == newItem.BookID);
             if (CheckCartExists == null)
             {
                 CheckCartExists = new Cart { UserID = userId, CreatedDate = DateTime.Now };
@@ -39,7 +41,13 @@ namespace DigitalBookStoreManagement.Repositories
 
 
             }
+
             var checkQuantityAvailable = _context.Inventories.FirstOrDefault(QA => QA.BookID == newItem.BookID);
+
+            if(checkQuantityAvailable == null)
+            {
+                return null;
+            }
             if (checkQuantityAvailable.Quantity <= newItem.Quantity)
             {
                 throw new QuantityNotAvailable(newItem.BookID);
@@ -51,8 +59,8 @@ namespace DigitalBookStoreManagement.Repositories
                 CartID = CheckCartExists.CartID,
                 BookID = newItem.BookID,
                 Quantity = newItem.Quantity,
-                Price = newItem.Price,
-                TotalAmount = newItem.TotalAmount,
+                Price = (double)BookToAdd.Price,
+                TotalAmount = (double)(BookToAdd.Price*newItem.Quantity),
 
 
             };
@@ -76,7 +84,7 @@ namespace DigitalBookStoreManagement.Repositories
             }
         }
 
-        public Order CheckOutCart(int cartId)
+        public Order CheckOutCart(int cartId , string Address , string Payment_Status)
         {
             var cart = _context.Carts.Include(c => c.CartItems).FirstOrDefault(c => c.CartID == cartId);
             if (cart == null)
@@ -91,7 +99,8 @@ namespace DigitalBookStoreManagement.Repositories
                 OrderStatus = "Pending",
                 OrderDate = DateTime.Now,
                 TotalAmount = cart.CartItems.Sum(item => item.TotalAmount),
-                PaymentStatus = "Not Paid",
+                PaymentStatus = Payment_Status,
+                DeliveryAddress = Address,
                 OrderItems = cart.CartItems.Select(ci => new OrderItem
                 {
                     BookID = ci.BookID,

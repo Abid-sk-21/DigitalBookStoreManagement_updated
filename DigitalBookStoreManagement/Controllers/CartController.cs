@@ -42,14 +42,14 @@ namespace DigitalBookStoreManagement.Controllers
             {
                 return Ok(CheckIfAdded);
             }
-            return BadRequest();
+            return BadRequest($"Book with BookId {newItem.BookID} does not exists");
         }
 
         [Authorize(Roles = "Customer")]
         [HttpPost("checkout/{cartId}")]
-        public IActionResult Checkout(int cartId)
+        public IActionResult Checkout(int cartId ,string Address , string Payment_Status)
         {
-            var OrderCreated = _cartRepository.CheckOutCart(cartId);
+            var OrderCreated = _cartRepository.CheckOutCart(cartId , Address , Payment_Status) ;
             if (OrderCreated != null)
             {
                 return Ok(OrderCreated);

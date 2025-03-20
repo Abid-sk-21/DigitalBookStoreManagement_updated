@@ -9,6 +9,6 @@ namespace DigitalBookStoreManagement.Repositories
         Cart AddItemsToCart(int userId, CartItem newItem);
         Task DeleteCart(int id);
 
-        Order CheckOutCart(int cartId);
+        Order CheckOutCart(int cartId, string Address, string Payment_Status);
     }
 }
