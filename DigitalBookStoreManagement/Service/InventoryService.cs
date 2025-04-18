@@ -1,5 +1,4 @@
-﻿
-using DigitalBookStoreManagement.Exceptions;
+﻿using DigitalBookStoreManagement.Exceptions;
 using DigitalBookStoreManagement.Model;
 using DigitalBookStoreManagement.Repository;
 using DigitalBookStoreManagement.Service;
@@ -85,6 +84,7 @@ namespace DigitalBookstoreManagement.Services
                 throw new NotFoundException($"Inventory for ID {inventory.InventoryID} not found.");
             }
 
+            _inventoryRepository.DetachEntity(existingInventory);
             await _inventoryRepository.UpdateInventoryAsync(inventory);
         }
 
@@ -121,12 +121,6 @@ namespace DigitalBookstoreManagement.Services
         public async Task UpdateStockOnOrderAsync(int bookId, int orderedQuantity)
         {
             var inventory = await _inventoryRepository.GetInventoryByBookIdAsync(bookId);
-            //if (inventory != null)
-            //{
-            //    inventory.Quantity -= orderedQuantity;
-            //    await _inventoryRepository.UpdateInventoryAsync(inventory);
-            //    await CheckStockAndNotifyAdminAsync(bookId); // Check stock after updating
-            //}
 
             if (inventory == null)
             {
@@ -148,6 +142,7 @@ namespace DigitalBookstoreManagement.Services
             {
                 throw new NotFoundException($"No inventory found for BookID {bookId}.");
             }
+            inventory.Quantity += quantity;
             await _inventoryRepository.UpdateInventoryAsync(inventory);
             return true;
         }

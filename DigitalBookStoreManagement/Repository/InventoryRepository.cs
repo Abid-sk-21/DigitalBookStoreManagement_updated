@@ -1,5 +1,4 @@
-﻿
-using DigitalBookStoreManagement.Model;
+﻿using DigitalBookStoreManagement.Model;
 using DigitalBookStoreManagement.Repository;
 using Microsoft.EntityFrameworkCore;
 
@@ -130,11 +129,16 @@ namespace DigitalBookstoreManagement.Repository
                 return false;
             }
             inventory.Quantity += quantity;
+            _context.Update(inventory);
             await _context.SaveChangesAsync();
-
             await CheckStockAndNotifyAdminAsync(bookId);
 
             return true;
+        }
+
+        public void DetachEntity(Inventory inventory)
+        {
+            _context.Entry(inventory).State = EntityState.Detached;
         }
     }
 }

@@ -3,6 +3,7 @@ using DigitalBookStoreManagement.Model;
 using DigitalBookStoreManagement.Models;
 using DigitalBookStoreManagement.Service;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,18 +11,21 @@ namespace DigitalBookStoreManagement.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
+    //[EnableCors("AllowAllOrigins")]
     public class InventoryController : ControllerBase
     {
         private readonly I_InventoryService _inventoryService;
         private readonly IAuth jwtAuth;
-        public InventoryController(I_InventoryService inventoryService,IAuth jwt)
+        public InventoryController(I_InventoryService inventoryService, IAuth jwt)
         {
             _inventoryService = inventoryService;
             jwtAuth = jwt;
         }
 
         // ✅ 1. Get all inventory items
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
+        [AllowAnonymous]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Inventory>>> GetAllInventories()
         {
@@ -30,7 +34,8 @@ namespace DigitalBookStoreManagement.Controllers
         }
 
         // ✅ 2. Get inventory by InventoryID
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
+        [AllowAnonymous]
         [HttpGet("{id}")]
         public async Task<ActionResult<Inventory>> GetInventoryById(int id)
         {
@@ -39,7 +44,8 @@ namespace DigitalBookStoreManagement.Controllers
         }
 
         // ✅ 3. Get inventory by BookID
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
+        [AllowAnonymous]
         [HttpGet("book/{bookId}")]
         public async Task<ActionResult<Inventory>> GetInventoryByBookId(int bookId)
         {
@@ -48,12 +54,13 @@ namespace DigitalBookStoreManagement.Controllers
         }
 
         // ✅ 4. Add new inventory
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
+        [AllowAnonymous]
         [HttpPost]
         public async Task<ActionResult<Inventory>> AddInventory([FromBody] InventoryDTO inventoryDto)
         {
-            if (inventoryDto == null)
-                return BadRequest("Invalid inventory data.");
+            //if (inventoryDto == null)
+            //    return BadRequest("Invalid inventory data.");
 
             var inventory = new Inventory
             {
@@ -68,14 +75,22 @@ namespace DigitalBookStoreManagement.Controllers
         }
 
         // ✅ 5. Update inventory
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
+        [AllowAnonymous]
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateInventory(int id, [FromBody] Inventory inventory)
+        public async Task<IActionResult> UpdateInventory(int id, [FromBody] InventoryDTO inventoryDto)
         {
-            if (inventory == null || id != inventory.InventoryID)
-                return BadRequest("Inventory ID mismatch or invalid data.");
+            //if (inventory == null || id != inventory.InventoryID)
+            //    return BadRequest("Inventory ID mismatch or invalid data.");
 
             //  inventory.Book = null;
+            var inventory = new Inventory
+            {
+                InventoryID = inventoryDto.InventoryID,
+                BookID = inventoryDto.BookID,
+                Quantity = inventoryDto.Quantity,
+                NotifyLimit = inventoryDto.NotifyLimit,
+            };
 
             await _inventoryService.UpdateInventoryAsync(inventory);
             return Ok("Inventory updated succesfully.");
@@ -83,43 +98,47 @@ namespace DigitalBookStoreManagement.Controllers
 
         //Add Stock in Inventory
         [HttpPost("add-stock")]
+        [AllowAnonymous]
         public async Task<IActionResult> AddStock(int bookId, int quantity)
         {
             bool success = await _inventoryService.AddStockAsync(bookId, quantity);
             //bool isAvailable = await _inventoryService.IsStockAvailableAsync(bookId, quantity);
 
-            if (!success)
-            {
-                return BadRequest("Stock update failed. Inventory item not found.");
-            }
+            //if (!success)
+            //{
+            //    return BadRequest("Stock update failed. Inventory item not found.");
+            //}
 
             return Ok("Stock added successfully.");
         }
 
         // ✅ 6. Delete inventory
+        [AllowAnonymous]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteInventory(int id)
         {
             var existingInventory = await _inventoryService.GetInventoryByIdAsync(id);
-            if (existingInventory == null)
-                return NotFound("Inventory not found!");
+            //if (existingInventory == null)
+            //    return NotFound("Inventory not found!");
 
             await _inventoryService.DeleteInventoryAsync(id);
             return Ok($"Inventory {id} deleted successfully.");
         }
 
+        [AllowAnonymous]
         [HttpPut("update-stock")]
         public async Task<IActionResult> UpdateStockOnOrder(int bookId, int orderedQuantity)
         {
             bool isAvailable = await _inventoryService.IsStockAvailableAsync(bookId, orderedQuantity);
-            if (!isAvailable)
-                return BadRequest("Insufficient stock!");
+            //if (!isAvailable)
+            //    return BadRequest("Insufficient stock!");
 
             await _inventoryService.UpdateStockOnOrderAsync(bookId, orderedQuantity);
             return Ok("Stock updated successfully!");
         }
 
         // ✅ 7. Check Stock and Notify Admin
+        [AllowAnonymous]
         [HttpPost("check-stock/{bookId}")]
         public async Task<IActionResult> CheckStockAndNotifyAdminAsync(int bookId)
         {

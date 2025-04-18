@@ -7,5 +7,6 @@ namespace DigitalBookStoreManagement.Repository
         public Task AddNotificationAsync(string message);
         public Task<IEnumerable<Notification>> GetAllNotificationsAsync();
         public Task AddorUpdateNotificationAsync(int bookId, string title, int inventoryId, int notifylimit);
+        public Task DeleteNotificationAsync(int notificationId);
     }
 }

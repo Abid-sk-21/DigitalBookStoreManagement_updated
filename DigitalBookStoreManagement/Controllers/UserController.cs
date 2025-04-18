@@ -26,7 +26,8 @@ namespace DigitalBookStoreManagement.Controllers
             this._orderRepository = orderRepository;
         }
         //Get all the data stored in database 
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
+        [AllowAnonymous]
         [HttpGet("GetAllUsers")]
         public IActionResult Get()
         {
@@ -36,7 +37,8 @@ namespace DigitalBookStoreManagement.Controllers
         }
 
         //Get the particular data according to the id
-        [Authorize(Roles = "Customer,Admin")]
+        [Authorize(Roles = "Customer")]
+        //[AllowAnonymous]
         [HttpGet("UserById/{id}")]
         public ActionResult Get(int id)
         {
@@ -54,11 +56,31 @@ namespace DigitalBookStoreManagement.Controllers
             }
         }
 
+        //Get the particular data according to the Email
+
+        [Authorize(Roles = "Customer")]
+        [HttpGet("UserByEmail/{email}")]
+        public ActionResult Get(string email)
+        {
+            try
+            {
+                return Ok(service.GetUserInfo(email));
+            }
+            catch (UserNotFoundException ex)
+            {
+                return Conflict(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
+
 
         //Profile Management
-        [Authorize(Roles = "Customer,Admin")]
+        [Authorize(Roles = "Customer")]
         //[AllowAnonymous]
-        [HttpGet("ProfileManagement")]
+        [HttpGet("ProfileManagement/{UsereId}")]
         public ActionResult GetProfile(int UsereId)
         {
             var profile = _orderRepository.GetOrderByUserId(UsereId);
@@ -101,12 +123,13 @@ namespace DigitalBookStoreManagement.Controllers
         }
 
         //Update the record
-        [Authorize(Roles = "Customer,Admin")]
+        //[Authorize(Roles = "Customer,Admin")]
+        [AllowAnonymous]
         [HttpPut]
         [Route("Update-Details")]
-        public ActionResult Put(int id, [FromBody]string password)
+        public ActionResult Put(string email, [FromBody]string password)
         {
-            return Ok(service.UpdateUser(id, password));
+            return Ok(service.UpdateUser(email, password));
         }
 
 
@@ -114,7 +137,9 @@ namespace DigitalBookStoreManagement.Controllers
         [AllowAnonymous]
         [HttpPost("authentication")]
         public IActionResult Authentication([FromBody] UserCredential credential)
+
         {
+            
             var token = jwtAuth.Authentication(credential.Email, credential.Password);
             if (token == "invalid credential")
                 return Unauthorized(new { Warning = "Invalid Credentials" });

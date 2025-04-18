@@ -14,5 +14,7 @@ namespace DigitalBookStoreManagement.Repository
         public Task UpdateStockOnOrderAsync(int bookId, int orderedQuantity);
         public Task CheckStockAndNotifyAdminAsync(int bookId);
         public Task<bool> AddStockAsync(int bookId, int quantity);
+
+        void DetachEntity(Inventory inventory);
     }
 }
