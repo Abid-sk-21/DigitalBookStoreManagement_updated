@@ -23,7 +23,8 @@ namespace DigitalBookStoreManagement.Controllers
         }
 
         // GET: api/book
-        [Authorize(Roles = "Admin,Customer")]
+        //[Authorize(Roles = "Admin,Customer")]
+        [AllowAnonymous]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<BookManagement>>> GetAllBooks()
         {
@@ -31,7 +32,8 @@ namespace DigitalBookStoreManagement.Controllers
         }
 
         // GET: api/book/{id}
-        [Authorize(Roles = "Admin,Customer")]
+        //[Authorize(Roles = "Admin,Customer")]
+        [AllowAnonymous]
         [HttpGet("{id}")]
         public async Task<ActionResult<BookManagement>> GetBookById(int id)
         {
@@ -44,7 +46,8 @@ namespace DigitalBookStoreManagement.Controllers
         }
 
         // POST: api/book
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
+        [AllowAnonymous]
         [HttpPost]
         public async Task<ActionResult> AddBook([FromBody] BookManagement book)
         {
@@ -57,7 +60,8 @@ namespace DigitalBookStoreManagement.Controllers
         }
 
         // PUT: api/book/{id}
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
+        [AllowAnonymous]
         [HttpPut("{id}")]
         public async Task<ActionResult> UpdateBook(int id, [FromBody] BookManagement book)
         {
@@ -70,7 +74,8 @@ namespace DigitalBookStoreManagement.Controllers
         }
 
         // DELETE: api/book/{id}
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
+        [AllowAnonymous]
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeleteBook(int id)
         {
@@ -79,7 +84,8 @@ namespace DigitalBookStoreManagement.Controllers
         }
 
         // GET: api/book/search?title={title}
-        [Authorize(Roles = "Admin,Customer")]
+        //[Authorize(Roles = "Admin,Customer")]
+        [AllowAnonymous]
         [HttpGet("search")]
         public async Task<ActionResult<IEnumerable<BookManagement>>> SearchBooksByTitle([FromQuery] string title)
         {
@@ -88,7 +94,8 @@ namespace DigitalBookStoreManagement.Controllers
         }
 
         // GET: api/book/filter/category?categoryName={categoryName}
-        [Authorize(Roles = "Admin,Customer")]
+        //[Authorize(Roles = "Admin,Customer")]
+        [AllowAnonymous]
         [HttpGet("filter/category")]
         public async Task<ActionResult<IEnumerable<BookManagement>>> FilterBooksByCategory([FromQuery] string categoryName)
         {
@@ -96,7 +103,8 @@ namespace DigitalBookStoreManagement.Controllers
         }
 
         // GET: api/book/filter/author?authorName={authorName}
-        [Authorize(Roles = "Admin,Customer")]
+        //[Authorize(Roles = "Admin,Customer")]
+        [AllowAnonymous]
         [HttpGet("filter/author")]
         public async Task<ActionResult<IEnumerable<BookManagement>>> FilterBooksByAuthor([FromQuery] string authorName)
         {
