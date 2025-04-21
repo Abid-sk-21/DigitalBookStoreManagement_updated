@@ -1,5 +1,4 @@
-﻿
-using DigitalBookStoreManagement.Model;
+﻿using DigitalBookStoreManagement.Model;
 using DigitalBookStoreManagement.Repository;
 using Microsoft.EntityFrameworkCore;
 

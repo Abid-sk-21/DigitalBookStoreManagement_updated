@@ -53,7 +53,8 @@ namespace DigitalBookStoreManagement.Controllers
                 return StatusCode(500, $"Internal server error: {ex.Message}");
             }
         }
-        [Authorize(Roles = "Customer")]
+        //[Authorize(Roles = "Customer")]
+        [AllowAnonymous]
         [HttpGet("user/{userId}")]
         public ActionResult<IEnumerable<Order>> GetOrderByUserId(int userId)
         {
@@ -69,7 +70,8 @@ namespace DigitalBookStoreManagement.Controllers
         }
 
 
-        [Authorize(Roles = "Customer")]
+        //[Authorize(Roles = "Customer")]
+        [AllowAnonymous]
         [HttpPost("place-order")]
         public ActionResult<Order> PlaceOrder(Order order)
         {

@@ -24,6 +24,12 @@ namespace DigitalBookStoreManagement.Repository
             return context.Users.FirstOrDefault(x => x.UserID == id);
         }
 
+        public User GetUserInfo(string email)
+        {
+
+            return context.Users.FirstOrDefault(x => x.Email == email );
+        }
+
         public int AddUser(User userInfo)
         {
             context.Users.Add(userInfo);
@@ -37,15 +43,11 @@ namespace DigitalBookStoreManagement.Repository
             return context.SaveChanges();
         }
 
-        public int UpdateUser(int id, string password )
+        public int UpdateUser(string email, string password )
         {
-            User UI = context.Users.FirstOrDefault( x=> x.UserID == id);
-            //UI.Name = userInfo.Name;
-            //UI.Email = userInfo.Email;
+            User UI = context.Users.FirstOrDefault( x=> x.Email == email);
+            
             UI.Password = password.ToString();
-            //UI.ConfirmPassword = userInfo.ConfirmPassword;
-            //UI.Role = userInfo.Role;
-            //context.Entry(UI).Property(u => u.Password).IsModified = true;
             context.Users.Update(UI);
             return context.SaveChanges();
 

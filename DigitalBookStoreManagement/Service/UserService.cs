@@ -16,6 +16,7 @@ namespace DigitalBookStoreManagement.Service
         {
             return repo.GetUserInfo();
         }
+       //Get user by Id
         public User GetUserInfo(int id)
         {
             User info = repo.GetUserInfo(id);
@@ -25,6 +26,20 @@ namespace DigitalBookStoreManagement.Service
             }
             return info;
         }
+
+        //Get user by email
+        public User GetUserInfo(string email)
+        {
+            User info = repo.GetUserInfo(email);
+            if (info == null)
+            {
+                throw new UserNotFoundException($"No User found with email {email}");
+            }
+            return info;
+        }
+
+
+
         //Insert user 
         public int AddUser(User userInfo)
         {
@@ -47,18 +62,18 @@ namespace DigitalBookStoreManagement.Service
         }
 
         //Update user 
-        public int UpdateUser(int id, string password)
+        public int UpdateUser(string email, string password)
 
         {
 
-            if (repo.GetUserInfo(id) == null)
+            if (repo.GetUserInfo(email) == null)
             {
-                throw new UserNotFoundException($"User do not exists with this userid {id}");
+                throw new UserNotFoundException($"User do not exists with this email {email}");
             }
-            return repo.UpdateUser(id, password);
+            return repo.UpdateUser(email, password);
         }
 
-        //Profile Management
+        
        
 
     }

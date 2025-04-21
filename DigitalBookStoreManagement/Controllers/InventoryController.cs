@@ -17,7 +17,7 @@ namespace DigitalBookStoreManagement.Controllers
     {
         private readonly I_InventoryService _inventoryService;
         private readonly IAuth jwtAuth;
-        public InventoryController(I_InventoryService inventoryService,IAuth jwt)
+        public InventoryController(I_InventoryService inventoryService, IAuth jwt)
         {
             _inventoryService = inventoryService;
             jwtAuth = jwt;
