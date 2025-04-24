@@ -1,4 +1,5 @@
-﻿using DigitalBookStoreManagement.Model;
+﻿using DigitalBookStoreManagement.Exceptions;
+using DigitalBookStoreManagement.Model;
 using Microsoft.EntityFrameworkCore;
 
 namespace DigitalBookStoreManagement.Repository
@@ -79,6 +80,15 @@ namespace DigitalBookStoreManagement.Repository
         }
         public async Task UpdateBookAsync(BookManagement book)
         {
+            var existingBook = await _context.Books.AsNoTracking().FirstOrDefaultAsync(b => b.BookID == book.BookID);
+            if (existingBook == null)
+            {
+                throw new NotFoundException($"Book with ID {book.BookID} not found.");
+            }
+
+            // Detach the existing tracked entity to avoid conflicts
+            _context.Entry(existingBook).State = EntityState.Detached;
+
             _context.Books.Update(book);
             await _context.SaveChangesAsync();
         }

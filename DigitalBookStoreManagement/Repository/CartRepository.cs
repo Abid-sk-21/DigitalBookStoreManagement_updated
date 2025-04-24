@@ -396,6 +396,7 @@
 using DigitalBookStoreManagement.Expections;
 using DigitalBookStoreManagement.Model;
 using DigitalBookStoreManagement.Models;
+using DigitalBookStoreManagement.Repository;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
@@ -406,10 +407,12 @@ namespace DigitalBookStoreManagement.Repositories
     public class CartRepository : ICartRepository
     {
         private readonly BookStoreDBContext _context;
+        private readonly I_NotificationRepository _notificationRepository;
 
-        public CartRepository(BookStoreDBContext context)
+        public CartRepository(BookStoreDBContext context, I_NotificationRepository notificationRepository)
         {
             _context = context;
+            _notificationRepository = notificationRepository;
         }
 
 
@@ -487,6 +490,18 @@ namespace DigitalBookStoreManagement.Repositories
 
             };
             checkQuantityAvailable.Quantity = checkQuantityAvailable.Quantity - newItem.Quantity;
+            // Check if the inventory quantity is below the notification limit
+            if (checkQuantityAvailable.Quantity <= checkQuantityAvailable.NotifyLimit)
+            {
+                // Call the notification repository to add or update the notification
+                _notificationRepository.AddorUpdateNotificationAsync(
+                    newItem.BookID,
+                    BookToAdd.Title,
+                    checkQuantityAvailable.InventoryID,
+                    checkQuantityAvailable.NotifyLimit
+                ).Wait(); // Use `.Wait()` to handle the async call in a synchronous method
+            }
+
             _context.CartItems.Add(cartItemToAdd);
             _context.SaveChanges();
             return CheckCartExists;
