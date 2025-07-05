@@ -393,6 +393,7 @@
 
 
 
+using DigitalBookstoreManagement.Repository;
 using DigitalBookStoreManagement.Expections;
 using DigitalBookStoreManagement.Model;
 using DigitalBookStoreManagement.Models;
@@ -408,11 +409,13 @@ namespace DigitalBookStoreManagement.Repositories
     {
         private readonly BookStoreDBContext _context;
         private readonly I_NotificationRepository _notificationRepository;
+        private readonly I_InventoryRepository _inventoryRepository;
 
-        public CartRepository(BookStoreDBContext context, I_NotificationRepository notificationRepository)
+        public CartRepository(BookStoreDBContext context, I_NotificationRepository notificationRepository, I_InventoryRepository inventoryRepository)
         {
             _context = context;
             _notificationRepository = notificationRepository;
+            _inventoryRepository = inventoryRepository;
         }
 
 
@@ -504,6 +507,7 @@ namespace DigitalBookStoreManagement.Repositories
 
             _context.CartItems.Add(cartItemToAdd);
             _context.SaveChanges();
+            _inventoryRepository.CheckStockAndNotifyAdminAsync(newItem.BookID);
             return CheckCartExists;
 
 
